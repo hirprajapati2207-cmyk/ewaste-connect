@@ -210,13 +210,13 @@ def update_request(req_id):
     flash(f'Request #{req.id} updated to {req.status}', 'success')
     return redirect(url_for('dashboard'))
 
+with app.app_context():
+    db.create_all()
+    # Add default admin if not exists
+    if not User.query.filter_by(email='admin@ewaste.com').first():
+        admin = User(name='System Admin', email='admin@ewaste.com', password_hash=generate_password_hash('admin123'), role='admin')
+        db.session.add(admin)
+        db.session.commit()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        # Add default admin if not exists
-        if not User.query.filter_by(email='admin@ewaste.com').first():
-            admin = User(name='System Admin', email='admin@ewaste.com', password_hash=generate_password_hash('admin123'), role='admin')
-            db.session.add(admin)
-            db.session.commit()
-            
     app.run(debug=True, port=5000)
