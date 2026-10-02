@@ -1,0 +1,24 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.card {
+    border-radius: 10px;
+}
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+.btn-success {
+    background-color: #198754;
+    border: none;
+}
+.btn-success:hover {
+    background-color: #146c43;
+}
+.table th {
+    font-weight: 600;
+}
+.badge {
+    font-size: 0.85em;
+    padding: 0.4em 0.6em;
+}

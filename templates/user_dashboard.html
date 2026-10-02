@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Welcome, {{ current_user.name }}</h2>
+        <p class="text-muted">Manage your e-waste submissions and track your environmental impact.</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_ewaste') }}" class="btn btn-success btn-lg">+ Add E-Waste</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card bg-light border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title text-success">Total E-Waste Recycled</h5>
+                <h2 class="display-5">{{ my_weight | default(0) }} kg</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-light border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title text-success">Eco Points Earned</h5>
+                <h2 class="display-5 text-warning">{{ current_user.eco_points }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>My E-Waste Requests History</h4>
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Qty</th>
+                        <th>Est. Weight</th>
+                        <th>Mode</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                    <tr>
+                        <td>#{{ req.id }}</td>
+                        <td>{{ req.item_name }}</td>
+                        <td>{{ req.category }}</td>
+                        <td>{{ req.quantity }}</td>
+                        <td>{{ req.estimated_weight }} kg</td>
+                        <td>{{ req.pickup_mode | title }}</td>
+                        <td>{{ req.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if req.status == 'Requested' %}
+                                <span class="badge bg-secondary">Requested</span>
+                            {% elif req.status == 'Accepted' %}
+                                <span class="badge bg-primary">Accepted</span>
+                            {% elif req.status == 'Scheduled' %}
+                                <span class="badge bg-info text-dark">Scheduled</span>
+                            {% elif req.status == 'Collected' %}
+                                <span class="badge bg-warning text-dark">Collected</span>
+                            {% elif req.status == 'Processed' %}
+                                <span class="badge bg-success">Processed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-muted">No requests found. Click "Add E-Waste" to submit your first item.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

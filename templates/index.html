@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row align-items-center mt-5">
+    <div class="col-md-6">
+        <h1 class="display-4 fw-bold text-success">Dispose of E-Waste Responsibly.</h1>
+        <p class="lead">Join E-WasteConnect to safely discard your old electronic devices. Earn Eco-Points and protect the environment.</p>
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('register') }}" class="btn btn-success btn-lg mt-3">Get Started</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-lg mt-3 ms-2">Login</a>
+        {% else %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg mt-3">Go to Dashboard</a>
+        {% endif %}
+    </div>
+    <div class="col-md-6 text-center mt-4 mt-md-0">
+        <div class="card shadow border-0 bg-light">
+            <div class="card-body py-5">
+                <h3 class="card-title text-success">Our Impact (Demo)</h3>
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <h2>{{ global_weight | default(0) }} kg</h2>
+                        <p class="text-muted">E-Waste Collected</p>
+                    </div>
+                    <div class="col-6">
+                        <h2>{{ global_items | default(0) }}</h2>
+                        <p class="text-muted">Items Recycled</p>
+                    </div>
+                </div>
+                <small class="text-muted">* These are prototype demo metrics.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 pt-5 text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h4 class="text-success">1. Register & Submit</h4>
+                <p>Tell us what electronic items you want to dispose of and submit a request.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h4 class="text-success">2. Schedule Pickup</h4>
+                <p>Choose a convenient time for our verified partners to pick up or you can drop it off.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h4 class="text-success">3. Track & Earn</h4>
+                <p>Track your request status and earn Eco-Points for contributing to a sustainable future.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

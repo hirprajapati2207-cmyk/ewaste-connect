@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>Partner Dashboard</h2>
+        <p class="text-muted">Manage incoming collection requests and update their statuses.</p>
+    </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#assigned" type="button">My Tasks ({{ assigned|length }})</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pending" type="button">Available Requests ({{ pending|length }})</button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="assigned">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Item</th>
+                                <th>Mode & Date</th>
+                                <th>Address</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in assigned %}
+                            <tr>
+                                <td>#{{ req.id }}</td>
+                                <td>{{ req.user.name }}<br><small>{{ req.user.phone }}</small></td>
+                                <td>{{ req.item_name }} ({{ req.quantity }})<br><small>{{ req.estimated_weight }}kg</small></td>
+                                <td>{{ req.pickup_mode|title }}<br>{{ req.scheduled_date }} {{ req.time_slot }}</td>
+                                <td>{{ req.collection_address }}</td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ req.status }}</span>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('update_request', req_id=req.id) }}">
+                                        {% if req.status == 'Accepted' %}
+                                            <button name="action" value="schedule" class="btn btn-sm btn-info w-100 mb-1">Mark Scheduled</button>
+                                        {% elif req.status == 'Scheduled' %}
+                                            <button name="action" value="collect" class="btn btn-sm btn-warning w-100 mb-1">Mark Collected</button>
+                                        {% elif req.status == 'Collected' %}
+                                            <button name="action" value="process" class="btn btn-sm btn-success w-100 mb-1">Mark Processed</button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="7" class="text-center py-4">No tasks assigned to you.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pending">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>User Area</th>
+                                <th>Item</th>
+                                <th>Weight</th>
+                                <th>Mode</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in pending %}
+                            <tr>
+                                <td>#{{ req.id }}</td>
+                                <td>{{ req.collection_address }}</td>
+                                <td>{{ req.item_name }} ({{ req.category }})</td>
+                                <td>{{ req.estimated_weight }} kg</td>
+                                <td>{{ req.pickup_mode|title }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('update_request', req_id=req.id) }}">
+                                        <button name="action" value="accept" class="btn btn-sm btn-primary">Accept Request</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6" class="text-center py-4">No pending requests available in your area.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

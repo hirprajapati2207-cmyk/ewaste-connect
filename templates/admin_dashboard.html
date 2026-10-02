@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>Admin Dashboard</h2>
+        <p class="text-muted">Platform overview and management.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-light border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted text-uppercase">Total Users</h6>
+                <h3 class="mb-0">{{ users_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted text-uppercase">Total Partners</h6>
+                <h3 class="mb-0">{{ partners_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted text-uppercase">Requests</h6>
+                <h3 class="mb-0">{{ reqs|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-white text-uppercase">System Health</h6>
+                <h3 class="mb-0">Active</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">All System Requests</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Partner</th>
+                        <th>Item & Category</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in reqs %}
+                    <tr>
+                        <td>#{{ req.id }}</td>
+                        <td>{{ req.user.name }}</td>
+                        <td>{{ req.partner.name if req.partner else 'Unassigned' }}</td>
+                        <td>{{ req.item_name }} ({{ req.category }})</td>
+                        <td>
+                            <span class="badge bg-secondary">{{ req.status }}</span>
+                        </td>
+                        <td>{{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center py-4">No requests found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
